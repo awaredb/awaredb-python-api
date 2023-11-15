@@ -63,7 +63,7 @@ class AwareDB:
         Get a token from the server with the provided username and password.
         """
         response = requests.post(
-            f"/rest/auth/token/login/",
+            f"{self.host}/rest/auth/token/login/",
             json={"username": user, "password": password},
         )
         return response.json().get("token")
@@ -218,6 +218,10 @@ class AwareDB:
             url,
             json=data or {},
             headers={"Authorization": f"Token {self.token}"})
+        if response.status_code == 400:
+            raise ValueError(f"Invalid request", response.json())
+        if response.status_code != 200:
+            raise ValueError(f"Invalid request", response.content)
         return response.json().get("data")
 
     # -------------------------------------------------------------------------
