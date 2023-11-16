@@ -2,6 +2,23 @@
 
 This is a simple plugin to execute commands on AwareDB. For more information about AwareDB, read [here the full documentation](https://docs.aware-db.com/).
 
+## About AwareDB
+
+AwareDB aims to revolutionize the traditional approach to data by introducing the principle
+of **modularity** directly into the **data structure**. While modularity is a well-established
+concept in computer science, primarily applied to programming and infrastructure, the realm
+of data has remained predominantly static and non-modular,tightly bound to the code
+that governs it.
+
+Our innovative approach introduces a groundbreaking concept wherein data becomes **self-aware**.
+Individual pieces of data can seamlessly **connect**, **reference one another** through direct links
+or employ **mathematical** and **logical operations**. Notably, alterations to one node trigger
+**automatic cascading impacts** throughout the system, all achieved without the need for
+additional code.
+
+This marks a paradigm shift in data management, empowering a dynamic,
+interconnected, and **self-aware data environment**.
+
 ## Installation
 
 ```bash
@@ -19,11 +36,7 @@ awaredb = AwareDB(db="<my_db>", token="<my_token>")
 
 # Using username and password
 awaredb = AwareDB(db="<my_db>", user="<username>", password="<my_password>")
-
-
-nodes = awaredb.query(nodes=["*"])
 ```
-
 
 ## Read commands
 
