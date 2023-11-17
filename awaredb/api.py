@@ -10,6 +10,7 @@ class AwareDB:
     Python API to interact with AwareDB.
     """
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         db: str,
@@ -58,13 +59,14 @@ class AwareDB:
         """
         return self._request("check") == {"connected": True}
 
-    def _get_token(self, user: str=None, password: str=None):
+    def _get_token(self, user: str = None, password: str = None):
         """
         Get a token from the server with the provided username and password.
         """
         response = requests.post(
             f"{self.host}/rest/auth/token/login/",
             json={"username": user, "password": password},
+            timeout=30,
         )
         return response.json().get("token")
 
@@ -217,11 +219,13 @@ class AwareDB:
         response = requests.post(
             url,
             json=data or {},
-            headers={"Authorization": f"Token {self.token}"})
+            headers={"Authorization": f"Token {self.token}"},
+            timeout=180,
+        )
         if response.status_code == 400:
-            raise ValueError(f"Invalid request", response.json())
+            raise ValueError("Invalid request", response.json())
         if response.status_code != 200:
-            raise ValueError(f"Invalid request", response.content)
+            raise ValueError("Invalid request", response.content)
         return response.json().get("data")
 
     # -------------------------------------------------------------------------
@@ -238,14 +242,23 @@ class AwareDB:
         if not path.exists():
             raise ValueError(f"Path {path} does not exist.")
 
-        # Data to be loaded
+        # If flush is True, remove all data from database
+        if flush:
+            self.flush()
+
+        # Gather data to be loaded
         data = []
         if path.is_dir():
             self._load_folder(data, path, recursive)
         else:
             self._load_file(data, path)
 
-    def _load_folder(self, data: List[Dict[str, Any]], path: Path, recursive: bool = False):
+        # Upload data to database
+        self.update(data)
+
+    def _load_folder(
+        self, data: List[Dict[str, Any]], path: Path, recursive: bool = False
+    ):
         """
         Loads a folder of JSONs into list of data to be loaded.
         """
@@ -256,12 +269,11 @@ class AwareDB:
             elif file.suffix.lower() == ".json":
                 self._load_file(data, file)
 
-
     def _load_file(self, data: List[Dict[str, Any]], path: Path):
         """
         Loads a JSON file into a list of data to be loaded.
         """
-        with open(path, "r") as f:
+        with open(path, "r", encoding="utf-8") as f:
             content = json.load(f)
 
         if isinstance(content, list):

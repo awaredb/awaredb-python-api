@@ -1,5 +1,6 @@
-# Ignore tests
+# Ignore tests and tests data
 tests.py
+/data
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
