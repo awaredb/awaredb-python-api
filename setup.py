@@ -1,9 +1,9 @@
 from setuptools import setup
 
 setup(
-    name="AwareDB",
-    packages=["AwareDB"],
-    version="0.1.1",
+    name="awaredb",
+    packages=["awaredb"],
+    version="0.1.0",
     license="MIT",
     description="AwareDB: data modularity, simplified. Python API.",
     author="Nelson Monteiro",
