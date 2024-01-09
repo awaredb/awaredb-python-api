@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name="awaredb",
     packages=["awaredb"],
-    version="0.1.0",
+    version="0.1.1",
     license="MIT",
     description="AwareDB: data modularity, simplified. Python API.",
     author="Nelson Monteiro",

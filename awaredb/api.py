@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Union
 
@@ -199,6 +200,49 @@ class AwareDB:
         Removes all nodes, relations and relation types from database.
         """
         return self._request("flush")
+
+    # -------------------------------------------------------------------------
+    # History database commands
+    # -------------------------------------------------------------------------
+
+    def history(
+        self,
+        change_id: str = None,
+        ids: List[str] = None,
+        start: int = None,
+        end: int = None,
+        from_date: datetime = None,
+        to_date: datetime = None,
+    ) -> List[Dict[str, Any]]:
+        """
+        Return a list of changes of database.
+
+        :param change_id: Request details for a specific change.
+            If passed, all other inputs are ignored.
+        :type change_id: str
+        :param ids: IDs list of specific nodes or relation.
+        :type ids: List[str]
+        :param start: Initial number for pagination. Defaults to 0.
+        :type start: int
+        :param end: End number for pagination. Defaults to 1000.
+        :type end: int
+        :param from_date: Limit list from a specific date.
+        :type from_date: datetime
+        :param to_date: Limit list until a specific date.
+        :type to_date: datetime
+        :return: List of changes.
+        :rtype: List[Dict[str, Any]]
+        """
+        data = {
+            "change_id": change_id,
+            "ids": ids,
+            "start": start,
+            "end": end,
+            "from_date": from_date,
+            "to_date": to_date,
+        }
+        data = {key: value for key, value in data.items() if value is not None}
+        return self._request("history", data)
 
     # -------------------------------------------------------------------------
     # Generic methods to handle command requests
